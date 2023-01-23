@@ -10,6 +10,7 @@
 
 namespace webdna\commerce\bundles\elements;
 
+use craft\elements\User;
 use webdna\commerce\bundles\Bundles;
 use webdna\commerce\bundles\elements\db\BundleQuery;
 use webdna\commerce\bundles\events\CustomizeBundleSnapshotDataEvent;
@@ -116,8 +117,8 @@ class Bundle extends Purchasable
     {
         return $this->title;
     }
-    
-    
+
+
 
     /**
      * @inheritdoc
@@ -449,13 +450,13 @@ class Bundle extends Purchasable
     public function getDescription(): string
     {
         $description = "Bundle: $this->title";
-    
+
         /*if ($format = $this->getProduct()->getType()->descriptionFormat) {
             if ($rendered = Craft::$app->getView()->renderObjectTemplate($format, $this)) {
                 $description = $rendered;
             }
         }*/
-    
+
         // If title is not set yet default to blank string
         return (string)$description;
     }
@@ -733,4 +734,18 @@ class Bundle extends Purchasable
             ->all();
     }
 
+    public function canSave(User $user): bool
+    {
+        return parent::canSave($user) || $user->can('commerce-bundles-manageBundles');
+    }
+
+    public function canView(User $user): bool
+    {
+        return parent::canView($user) || $user->can('commerce-bundles-manageBundles');
+    }
+
+    public function canDelete(User $user): bool
+    {
+        return parent::canDelete($user) || $user->can('commerce-bundles-manageBundles');
+    }
 }
