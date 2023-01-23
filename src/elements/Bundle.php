@@ -10,6 +10,7 @@
 
 namespace webdna\commerce\bundles\elements;
 
+use craft\elements\User;
 use webdna\commerce\bundles\Bundles;
 use webdna\commerce\bundles\elements\db\BundleQuery;
 use webdna\commerce\bundles\events\CustomizeBundleSnapshotDataEvent;
@@ -65,7 +66,7 @@ class Bundle extends Purchasable
     public const EVENT_AFTER_COMPLETE_BUNDLE_ORDER = 'afterCompleteBundleOrder';
 
 
-    
+
 
     // Static Methods
     // =========================================================================
@@ -89,13 +90,17 @@ class Bundle extends Purchasable
     {
         return Craft::t('commerce-bundles', 'bundles');
     }
-    
+
     public static function refHandle(): ?string
     {
         return 'bundle';
     }
 
-    
+
+
+    /**
+     * @inheritdoc
+     */
     public static function hasContent(): bool
     {
         return true;
@@ -120,12 +125,12 @@ class Bundle extends Purchasable
     {
         return true;
     }
-    
+
     public static function find(): BundleQuery
     {
         return new BundleQuery(static::class);
     }
-    
+
     public static function defineSources(?string $context = null): array
     {
         if ($context === 'index') {
@@ -186,7 +191,7 @@ class Bundle extends Purchasable
 
         return $actions;
     }
-    
+
     protected static function defineTableAttributes(): array
     {
         return [
@@ -200,27 +205,27 @@ class Bundle extends Purchasable
             'expiryDate' => ['label' => Craft::t('commerce-bundles', 'Expiry Date')],
         ];
     }
-    
+
     protected static function defineDefaultTableAttributes(string $source): array
     {
         $attributes = [];
-    
+
         if ($source === '*') {
             $attributes[] = 'type';
         }
-    
+
         $attributes[] = 'postDate';
         $attributes[] = 'expiryDate';
         $attributes[] = 'link';
-    
+
         return $attributes;
     }
-    
+
     protected static function defineSearchableAttributes(): array
     {
         return ['title'];
     }
-    
+
     protected static function defineSortOptions(): array
     {
         return [
@@ -230,10 +235,10 @@ class Bundle extends Purchasable
             'price' => Craft::t('commerce-bundles', 'Price'),
         ];
     }
-    
+
     // Public Properties
     // =========================================================================
-    
+
     public ?int $id = null;
     public ?int $typeId = null;
     public ?int $taxCategoryId = null;
@@ -242,92 +247,92 @@ class Bundle extends Purchasable
     public ?DateTime $expiryDate = null;
     public ?string $sku = null;
     public ?float $price = null;
-    
+
     private ?BundleTypeModel $_bundleType = null;
     private ?array $_purchasables = null;
     private ?array $_purchasableIds = null;
     private ?array $_qtys = null;
-    
-    
-    
+
+
+
     // Public Methods
     // =========================================================================
-    
+
     public function __toString(): string
     {
         return (string)$this->title;
     }
-    
+
     public function getName(): string
     {
         return $this->title;
     }
-    
+
     public function canView(User $user): bool
     {
         if (parent::canView($user)) {
             return true;
         }
-    
+
         try {
             $bundleType = $this->getType();
         } catch (\Exception) {
             return false;
         }
-    
+
         return $user->can('commerce-bundles-manageBundleType:' . $bundleType->uid);
     }
-    
+
     public function canSave(User $user): bool
     {
         if (parent::canSave($user)) {
             return true;
         }
-    
+
         try {
             $bundleType = $this->getType();
         } catch (\Exception) {
             return false;
         }
-    
+
         return $user->can('commerce-bundles-manageBundleType:' . $bundleType->uid);
     }
-    
+
     public function canDuplicate(User $user): bool
     {
         if (parent::canDuplicate($user)) {
             return true;
         }
-    
+
         try {
             $bundleType = $this->getType();
         } catch (\Exception) {
             return false;
         }
-    
+
         return $user->can('commerce-bundles-manageBundleType:' . $bundleType->uid);
     }
-    
+
     public function canDelete(User $user): bool
     {
         if (parent::canDelete($user)) {
             return true;
         }
-    
+
         try {
             $bundleType = $this->getType();
         } catch (\Exception) {
             return false;
         }
-    
+
         return $user->can('commerce-bundles-manageBundleType:' . $bundleType->uid);
     }
-    
+
     public function canDeleteForSite(User $user): bool
     {
         return $this->canDelete($user);
     }
-    
+
     public function createAnother(): ?ElementInterface
     {
         return null;
@@ -401,7 +406,7 @@ class Bundle extends Purchasable
         if ($bundleType) {
             return UrlHelper::cpUrl('commerce-bundles/bundles/' . $bundleType->handle . '/' . $this->id);
         }
-        
+
         return null;
     }
 
@@ -564,7 +569,7 @@ class Bundle extends Purchasable
     public function getDescription(): string
     {
         $description = "Bundle: $this->title";
-    
+
         return (string)$description;
     }
 
@@ -754,7 +759,7 @@ class Bundle extends Purchasable
         ];
     }
 
-    
+
 
     protected function tableAttributeHtml(string $attribute): string
     {
@@ -795,6 +800,4 @@ class Bundle extends Purchasable
             ->where(['bundleId' => $this->id])
             ->all();
     }
-
-    
 }
