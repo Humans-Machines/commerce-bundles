@@ -26,6 +26,7 @@ class BundleQuery extends ElementQuery
     public mixed $postDate = null;
     public mixed $expiryDate = null;
     public array $purchasableIds = [];
+    public ?int $enabledForSite = null;
 
     // Public Methods
     // =========================================================================
