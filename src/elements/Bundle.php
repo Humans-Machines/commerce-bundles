@@ -568,7 +568,7 @@ class Bundle extends Purchasable
 
     public function getDescription(): string
     {
-        $description = "Bundle: $this->title";
+        $description = $this->title;
 
         return (string)$description;
     }
