@@ -10,7 +10,6 @@
 
 namespace webdna\commerce\bundles\elements;
 
-use craft\elements\User;
 use webdna\commerce\bundles\Bundles;
 use webdna\commerce\bundles\elements\db\BundleQuery;
 use webdna\commerce\bundles\events\CustomizeBundleSnapshotDataEvent;
