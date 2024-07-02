@@ -65,7 +65,8 @@ class BundlesController extends Controller
             throw new Exception('The bundle type was not found.');
         }
 
-        $this->requirePermission('commerce-bundles-manageBundleType:' . $bundleType->id);
+        if(!Craft::$app->getUser()->checkPermission('commerce-bundles-manageBundleType:' . $bundleType->uid))
+            $this->requirePermission('commerce-bundles-manageBundleType:' . $bundleType->id);
         $variables['bundleType'] = $bundleType;
 
         if ($siteHandle !== null) {
@@ -103,7 +104,7 @@ class BundlesController extends Controller
         return $this->renderTemplate('commerce-bundles/bundles/_edit', $variables);
     }
 
-    public function actionDeleteBundle(): Response
+    public function actionDeleteBundle(): ?Response
     {
         $this->requirePostRequest();
 
@@ -233,7 +234,8 @@ class BundlesController extends Controller
             throw new HttpException(404);
         }
 
-        $this->requirePermission('commerce-bundles-manageBundleType:' . $bundle->typeId);
+        if(!Craft::$app->getUser()->checkPermission('commerce-bundles-manageBundleType:' . $bundle->getType()->uid))
+            $this->requirePermission('commerce-bundles-manageBundleType:' . $bundle->typeId);
 
         // Create the token and redirect to the bundle URL with the token in place
         $token = Craft::$app->getTokens()->createToken([
@@ -310,7 +312,8 @@ class BundlesController extends Controller
             throw new HttpException(404);
         }
 
-        $this->requirePermission('commerce-bundles-manageBundleType:' . $bundle->getType()->id);
+        if(!Craft::$app->getUser()->checkPermission('commerce-bundles-manageBundleType:' . $bundle->getType()->uid))
+            $this->requirePermission('commerce-bundles-manageBundleType:' . $bundle->getType()->id);
     }
 
     // Private Methods

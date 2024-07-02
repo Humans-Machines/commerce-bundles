@@ -162,7 +162,8 @@ class Bundle extends Purchasable
 
         foreach ($bundleTypes as $bundleType) {
             $key = 'bundleType:'.$bundleType->id;
-            $canEditBundles = Craft::$app->getUser()->checkPermission('commerce-bundles-manageBundleType:' . $bundleType->id);
+            $canEditBundles = Craft::$app->getUser()->checkPermission('commerce-bundles-manageBundleType:' . $bundleType->id)
+                            || Craft::$app->getUser()->checkPermission('commerce-bundles-manageBundleType:' . $bundleType->uid);
 
             $sources[$key] = [
                 'key' => $key,

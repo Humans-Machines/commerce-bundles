@@ -58,11 +58,12 @@ class BundleTypesService extends Component
     {
         if (null === $this->_editableBundleTypeIds) {
             $this->_editableBundleTypeIds = [];
-            $allBundleTypeIds = $this->getAllBundleTypeIds();
+            $allBundleTypes = $this->getAllBundleTypes();
 
-            foreach ($allBundleTypeIds as $bundleTypeId) {
-                if (Craft::$app->getUser()->checkPermission('commerce-bundles-manageBundleType:' . $bundleTypeId)) {
-                    $this->_editableBundleTypeIds[] = $bundleTypeId;
+            foreach ($allBundleTypes as $bundleType) {
+                if (Craft::$app->getUser()->checkPermission('commerce-bundles-manageBundleType:' . $bundleType->id)
+                    || Craft::$app->getUser()->checkPermission('commerce-bundles-manageBundleType:' . $bundleType->uid)) {
+                    $this->_editableBundleTypeIds[] = $bundleType->id;
                 }
             }
         }
