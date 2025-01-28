@@ -437,13 +437,14 @@ class Bundle extends Purchasable
         return $this->typeId ? $this->_bundleType = Bundles::$plugin->bundleTypes->getBundleTypeById($this->typeId) : null;
     }
 
-    public function getTaxCategory(): ?TaxCategory
+    public function getTaxCategory(): TaxCategory
     {
-        if ($this->taxCategoryId) {
+         # TODO
+       # if ($this->taxCategoryId) {
             return Commerce::getInstance()->getTaxCategories()->getTaxCategoryById($this->taxCategoryId);
-        }
+        #}
 
-        return null;
+    #    return null;
     }
 
     public function getShippingCategory(): ?ShippingCategory
