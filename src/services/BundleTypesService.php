@@ -132,7 +132,8 @@ class BundleTypesService extends Component
                     'siteId',
                     'uriFormat',
                     'hasUrls',
-                    'template'
+                    'template',
+                    'uid'
                 ])
                 ->from('{{%bundles_bundletypes_sites}}')
                 ->where(['bundleTypeId' => $bundleTypeId])
@@ -288,7 +289,6 @@ class BundleTypesService extends Component
                             'siteId' => $siteId,
                             'typeId' => $bundleType->id,
                             'status' => null,
-                            'enabledForSite' => false,
                         ]
                     ]));
                 }
@@ -442,7 +442,8 @@ class BundleTypesService extends Component
                 'fieldLayoutId',
                 'name',
                 'handle',
-                'skuFormat'
+                'skuFormat',
+                'uid'
             ])
             ->from(['{{%bundles_bundletypes}}']);
     }
