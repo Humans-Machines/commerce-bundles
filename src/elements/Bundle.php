@@ -452,13 +452,14 @@ class Bundle extends Purchasable
        # return null;
     }
 
-    public function getShippingCategory(): ?ShippingCategory
+    public function getShippingCategory(): ShippingCategory
     {
-        if ($this->shippingCategoryId) {
+         # TODO
+        #if ($this->shippingCategoryId) {
             return Commerce::getInstance()->getShippingCategories()->getShippingCategoryById($this->shippingCategoryId);
-        }
+        #}
 
-        return null;
+        #return null;
     }
 
     // Events
