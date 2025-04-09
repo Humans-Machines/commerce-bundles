@@ -632,7 +632,7 @@ class Bundle extends Purchasable
         return $this->getPurchasables();
     }
 
-    public function getPurchasables(): array
+    public function getPurchasables(): ?array
     {
         if (null === $this->_purchasables) {
             foreach ($this->getPurchasableIds() as $id) {
@@ -643,7 +643,7 @@ class Bundle extends Purchasable
         return $this->_purchasables;
     }
 
-    public function getPurchasableIds(): array
+    public function getPurchasableIds(): ?array
     {
         if (null === $this->_purchasableIds) {
 
