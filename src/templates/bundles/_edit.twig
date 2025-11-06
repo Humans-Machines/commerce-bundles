@@ -88,7 +88,6 @@
 {% if bundle.id %}<input type="hidden" name="bundleId" value="{{ bundle.id }}" />{% endif %}
 
 <div id="fields" class="bundleProducts">
-	{{ bundleFields.titleField(bundle) }}
 	{% for purchasableType in purchasableTypes %}
 		{% set id = 'purchasables-'~purchasableType.elementType|id %}
 		<div class="field first" id="{{id}}-field">
@@ -212,10 +211,10 @@ var qty = [];
 	elements['{{id}}'].each(function(e) {
 		var $this = $(this),
 			id = $this.data('id');
-		var $div = $('<div class="flex"></div>').appendTo($this);
+		var $div = $('<div class="flex flex-nowrap" style="gap: 8px; align-items: center;"></div>').appendTo($this);
 			$div.append($this.find('.status'));
-			$div.append($this.find('.label').addClass('flex-1'));
-			$div.append('<div class="label">Qty: <input type="number" min="1" class="text qty" data-id="'+id+'" name="qty['+id+']" value="'+qty['{{id}}'][id]+'" /></div>');
+			$div.append($this.find('.label').css({'flex': '1 1 auto', 'min-width': '0'}));
+			$div.append('<div style="flex: 0 0 auto; white-space: nowrap;">Qty: <input type="number" min="1" class="text qty" style="width: 60px; display: inline-block;" data-id="'+id+'" name="qty['+id+']" value="'+qty['{{id}}'][id]+'" /></div>');
 			$div.append($this.find('.icon'));
 	})
 	new Craft.BaseElementSelectInput({
@@ -242,10 +241,10 @@ var qty = [];
 		onSelectElements: function(e) {
 			$.each(e, function(i) {
 				var $el = $('#{{id}}-Picker .element[data-id="'+this.id+'"]');
-				var $div = $('<div class="flex"></div>').appendTo($el);
+				var $div = $('<div class="flex flex-nowrap" style="gap: 8px; align-items: center;"></div>').appendTo($el);
 				$div.append($el.find('.status'));
-				$div.append($el.find('.label').addClass('flex-1'));
-				$div.append('<div class="label">Qty: <input type="number" min="1" class="text qty" data-id="'+this.id+'" name="qty['+this.id+']" value="1" /></div>');
+				$div.append($el.find('.label').css({'flex': '1 1 auto', 'min-width': '0'}));
+				$div.append('<div style="flex: 0 0 auto; white-space: nowrap;">Qty: <input type="number" min="1" class="text qty" style="width: 60px; display: inline-block;" data-id="'+this.id+'" name="qty['+this.id+']" value="1" /></div>');
 				$div.append($el.find('.icon'));
 			});
 		},
