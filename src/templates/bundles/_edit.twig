@@ -88,9 +88,10 @@
 {% if bundle.id %}<input type="hidden" name="bundleId" value="{{ bundle.id }}" />{% endif %}
 
 <div id="fields" class="bundleProducts">
+	{{ bundleFields.titleField(bundle) }}
 	{% for purchasableType in purchasableTypes %}
 		{% set id = 'purchasables-'~purchasableType.elementType|id %}
-		<div class="field first" id="{{id}}-field">
+		<div class="field" id="{{id}}-field">
 			<div class="heading">
 				<label id="{{id}}-label" class="required" for="{{id}}">Please select the {{purchasableType.name}} and quantities for this bundle</label>
 			</div>
