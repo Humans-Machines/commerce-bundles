@@ -260,6 +260,21 @@ class Bundle extends Purchasable
     // Public Methods
     // =========================================================================
 
+    public function behaviors(): array
+    {
+        $behaviors = parent::behaviors();
+
+        $behaviors['asCurrency'] = [
+            'class' => \craft\commerce\behaviors\CurrencyAttributeBehavior::class,
+            'currencyAttributes' => [
+                'basePrice',
+                'price',
+            ],
+        ];
+
+        return $behaviors;
+    }
+
     public function __toString(): string
     {
         return (string)$this->title;
@@ -563,6 +578,11 @@ class Bundle extends Purchasable
     }
 
     public function getPrice(): float
+    {
+        return $this->price;
+    }
+
+    public function getBasePrice(): ?float
     {
         return $this->price;
     }
