@@ -93,6 +93,28 @@
         placeholder: 'Enter price' | t('commerce'),
         errors: bundle.getErrors('price'),
     }) }}
-	
+
+{% endmacro %}
+
+{% macro displayFields(bundle) %}
+    {%- import '_includes/forms' as forms -%}
+
+    {{ forms.lightswitchField({
+        label: 'Display Included Styles' | t('commerce-bundles'),
+        instructions: 'Redundant if included styles are already part of the bundle name' | t('commerce-bundles'),
+        id: 'displayStyles',
+        name: 'displayStyles',
+        on: bundle.displayStyles ?? true,
+        errors: bundle.getErrors('displayStyles')
+    }) }}
+
+    {{ forms.lightswitchField({
+        label: 'Display Initially' | t('commerce-bundles'),
+        instructions: 'Display the bundle initially or hide it behind the "Show more" button' | t('commerce-bundles'),
+        id: 'displayInitially',
+        name: 'displayInitially',
+        on: bundle.displayInitially ?? true,
+        errors: bundle.getErrors('displayInitially')
+    }) }}
 {% endmacro %}
 

@@ -518,6 +518,8 @@ class BundlesController extends Controller
         // $bundle->promotable = (bool)$request->getBodyParam('promotable');
         $bundle->taxCategoryId = $request->getBodyParam('taxCategoryId');
         $bundle->shippingCategoryId = $request->getBodyParam('shippingCategoryId');
+        $bundle->displayStyles = (bool)$request->getBodyParam('displayStyles', true);
+        $bundle->displayInitially = (bool)$request->getBodyParam('displayInitially', true);
         $bundle->slug = $request->getBodyParam('slug');
 
         $bundle->enabledForSite = (bool)$request->getBodyParam('enabledForSite', $bundle->enabledForSite);

@@ -247,6 +247,8 @@ class Bundle extends Purchasable
     public ?DateTime $expiryDate = null;
     public ?string $sku = null;
     public ?float $price = null;
+    public ?bool $displayStyles = true;
+    public ?bool $displayInitially = true;
 
     private ?BundleTypeModel $_bundleType = null;
     private ?array $_purchasables = null;
@@ -495,6 +497,8 @@ class Bundle extends Purchasable
         $bundleRecord->taxCategoryId = $this->taxCategoryId;
         $bundleRecord->shippingCategoryId = $this->shippingCategoryId;
         $bundleRecord->price = $this->price;
+        $bundleRecord->displayStyles = $this->displayStyles;
+        $bundleRecord->displayInitially = $this->displayInitially;
 
         // Generate SKU if empty
         if (empty($this->sku)) {

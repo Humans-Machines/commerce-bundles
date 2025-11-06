@@ -67,7 +67,7 @@ class Bundles extends Plugin
     /**
      * @var string
      */
-    public string $schemaVersion = '1.1.1';
+    public string $schemaVersion = '1.1.2';
 
     // Public Methods
     // =========================================================================
