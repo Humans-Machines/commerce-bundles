@@ -659,8 +659,24 @@ class Bundle extends Purchasable
     public function getPurchasables(): ?array
     {
         if (null === $this->_purchasables) {
-            foreach ($this->getPurchasableIds() as $id) {
-                $this->_purchasables[] = Craft::$app->getElements()->getElementById($id);
+            $ids = $this->getPurchasableIds();
+            if (empty($ids)) {
+                $this->_purchasables = [];
+            } else {
+                // N+1 FIX: Batch-load all purchasables in ONE query instead of N queries
+                $this->_purchasables = \craft\commerce\elements\Variant::find()
+                    ->id($ids)
+                    ->status(null)
+                    ->indexBy('id')
+                    ->all();
+                // Preserve original order from $ids
+                $ordered = [];
+                foreach ($ids as $id) {
+                    if (isset($this->_purchasables[$id])) {
+                        $ordered[] = $this->_purchasables[$id];
+                    }
+                }
+                $this->_purchasables = $ordered;
             }
         }
 
