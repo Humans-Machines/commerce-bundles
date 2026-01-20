@@ -247,8 +247,8 @@ class Bundle extends Purchasable
     public ?DateTime $expiryDate = null;
     public ?string $sku = null;
     public ?float $price = null;
-    public bool $displayStyles = true;
-    public bool $displayInitially = true;
+    public mixed $displayStyles = true;
+    public mixed $displayInitially = true;
 
     private ?BundleTypeModel $_bundleType = null;
     private ?array $_purchasables = null;
