@@ -52,7 +52,7 @@ use DateTime;
 class Bundle extends Purchasable
 {
 
-     // Constants
+    // Constants
     // =========================================================================
 
     public const STATUS_LIVE = 'live';
@@ -163,7 +163,7 @@ class Bundle extends Purchasable
         foreach ($bundleTypes as $bundleType) {
             $key = 'bundleType:'.$bundleType->id;
             $canEditBundles = Craft::$app->getUser()->checkPermission('commerce-bundles-manageBundleType:' . $bundleType->id)
-                            || Craft::$app->getUser()->checkPermission('commerce-bundles-manageBundleType:' . $bundleType->uid);
+                || Craft::$app->getUser()->checkPermission('commerce-bundles-manageBundleType:' . $bundleType->uid);
 
             $sources[$key] = [
                 'key' => $key,
@@ -247,8 +247,8 @@ class Bundle extends Purchasable
     public ?DateTime $expiryDate = null;
     public ?string $sku = null;
     public ?float $price = null;
-    public ?bool $displayStyles = true;
-    public ?bool $displayInitially = true;
+    public bool $displayStyles = true;
+    public bool $displayInitially = true;
 
     private ?BundleTypeModel $_bundleType = null;
     private ?array $_purchasables = null;
@@ -259,21 +259,6 @@ class Bundle extends Purchasable
 
     // Public Methods
     // =========================================================================
-
-    public function behaviors(): array
-    {
-        $behaviors = parent::behaviors();
-
-        $behaviors['asCurrency'] = [
-            'class' => \craft\commerce\behaviors\CurrencyAttributeBehavior::class,
-            'currencyAttributes' => [
-                'basePrice',
-                'price',
-            ],
-        ];
-
-        return $behaviors;
-    }
 
     public function __toString(): string
     {
@@ -461,19 +446,19 @@ class Bundle extends Purchasable
 
     public function getTaxCategory(): TaxCategory
     {
-         # TODO
+        # TODO
         #if ($this->taxCategoryId) {
-            return Commerce::getInstance()->getTaxCategories()->getTaxCategoryById($this->taxCategoryId);
-       # }
+        return Commerce::getInstance()->getTaxCategories()->getTaxCategoryById($this->taxCategoryId);
+        # }
 
-       # return null;
+        # return null;
     }
 
     public function getShippingCategory(): ShippingCategory
     {
-         # TODO
+        # TODO
         #if ($this->shippingCategoryId) {
-            return Commerce::getInstance()->getShippingCategories()->getShippingCategoryById($this->shippingCategoryId);
+        return Commerce::getInstance()->getShippingCategories()->getShippingCategoryById($this->shippingCategoryId);
         #}
 
         #return null;
@@ -532,7 +517,7 @@ class Bundle extends Purchasable
         parent::afterSave($isNew);
     }
 
-        // Implement Purchasable
+    // Implement Purchasable
     // =========================================================================
 
     public function getPurchasableId(): int
@@ -578,11 +563,6 @@ class Bundle extends Purchasable
     }
 
     public function getPrice(): float
-    {
-        return $this->price;
-    }
-
-    public function getBasePrice(): ?float
     {
         return $this->price;
     }
@@ -733,10 +713,10 @@ class Bundle extends Purchasable
             $stock = $this->stock;
 
             //if($bundleStock != "unlimited") {
-                if ($lineItem->qty > $stock) {
-                    $lineItem->qty = $stock;
-                    $errors[] = 'You reached the maximum stock of ' . $lineItem->purchasable->getDescription();
-                }
+            if ($lineItem->qty > $stock) {
+                $lineItem->qty = $stock;
+                $errors[] = 'You reached the maximum stock of ' . $lineItem->purchasable->getDescription();
+            }
             //}
         }
         if ($errors) {

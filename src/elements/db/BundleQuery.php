@@ -161,6 +161,8 @@ class BundleQuery extends ElementQuery
             "bundles_bundles.expiryDate",
             "bundles_bundles.sku",
             "bundles_bundles.price",
+            "bundles_bundles.displayStyles",
+            "bundles_bundles.displayInitially",
         ]);
 
         if ($this->postDate) {
