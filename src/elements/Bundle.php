@@ -37,6 +37,7 @@ use craft\commerce\elements\Order;
 use craft\commerce\models\LineItem;
 use craft\commerce\models\TaxCategory;
 use craft\commerce\models\ShippingCategory;
+use craft\commerce\behaviors\CurrencyAttributeBehavior;
 
 use craft\digitalproducts\Plugin as DigitalProducts;
 use yii\base\Exception;
@@ -255,6 +256,24 @@ class Bundle extends Purchasable
     private ?array $_purchasableIds = null;
     private ?array $_qtys = null;
 
+
+    // Behaviors
+    // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors(): array
+    {
+        $behaviors = parent::behaviors();
+
+        $behaviors['currencyAttributes'] = [
+            'class' => CurrencyAttributeBehavior::class,
+            'currencyAttributes' => $this->currencyAttributes(),
+        ];
+
+        return $behaviors;
+    }
 
 
     // Public Methods
