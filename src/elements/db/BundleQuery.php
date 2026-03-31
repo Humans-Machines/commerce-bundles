@@ -152,7 +152,7 @@ class BundleQuery extends ElementQuery
 
         $this->joinElementTable("bundles_bundles");
 
-        $this->query->select([
+        $this->query->addSelect([
             "bundles_bundles.id",
             "bundles_bundles.typeId",
             "bundles_bundles.taxCategoryId",
