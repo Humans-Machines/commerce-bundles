@@ -98,25 +98,18 @@
 
 			<input type="hidden" name="purchasables[{{purchasableType.elementType}}]" value="" />
 
-			<div class="flex">
-				<div id="{{id}}-Picker" class="elementselect">
-					<div class="elements">
-						{% for element in purchasables[purchasableType.elementType] ?? [] %} 
-							{# {% include "_elements/element" with { context: 'field', size: 'small', name: 'purchasables['~purchasableType.elementType~']' } %}  #}
-							{% set element = include('_elements/element', {
-								context: 'field',
-								size: 'small',
-								name: 'purchasables['~purchasableType.elementType~']'
-							}) %}
-							{{ element|raw }}
-						{% endfor %}
-					</div>
-					
-					<div class="flex flex-nowrap">
-						<button type="button" class="btn add icon dashed">Choose {{purchasableType.name}}</button>
-						<div class="spinner hidden"></div>
-					</div>
+			<div id="{{id}}-Picker" class="elementselect">
+				<div class="elements">
+					{% for element in purchasables[purchasableType.elementType] ?? [] %}
+						{% set element = include('_elements/element', {
+							context: 'field',
+							size: 'small',
+							name: 'purchasables['~purchasableType.elementType~']'
+						}) %}
+						{{ element|raw }}
+					{% endfor %}
 				</div>
+				<button type="button" class="btn add icon dashed">Choose {{purchasableType.name}}</button>
 			</div>
 			{% if bundle.getErrors('purchasables-'~purchasableType.elementType|replace('\\','-')) %}
 			<ul class="errors">
@@ -196,60 +189,75 @@
 </div>
 {% endif %} {% endblock %}
 {% js %}
-var elements = [];
-var qty = [];
 {% for purchasableType in purchasableTypes %}
 	{% set id = 'purchasables-'~purchasableType.elementType|id %}
 	{% set type = purchasableType.elementType|replace({'\\':'\\\\'}) %}
 
-	elements['{{id}}'] = $('#{{id}}-Picker .element');
-	qty['{{id}}'] = { {% for key,qty in bundle.qtys %}
+	(function() {
+		var qtyMap = { {% for key,qty in bundle.qtys %}
 				{% set value = qty > 0 ? qty : 1 %}
-				{{ key ~ ':' ~ value }},
+				{{ key }}: {{ value }},
 			{% endfor %}
 		};
-		//console.log(elements['{{id}}'])
-	elements['{{id}}'].each(function(e) {
-		var $this = $(this),
-			id = $this.data('id');
-		var $div = $('<div class="flex flex-nowrap" style="gap: 8px; align-items: center;"></div>').appendTo($this);
-			$div.append($this.find('.status'));
-			$div.append($this.find('.label').css({'flex': '1 1 auto', 'min-width': '0'}));
-			$div.append('<div style="flex: 0 0 auto; white-space: nowrap;">Qty: <input type="number" min="1" class="text qty" style="width: 60px; display: inline-block;" data-id="'+id+'" name="qty['+id+']" value="'+qty['{{id}}'][id]+'" /></div>');
-			$div.append($this.find('.icon'));
-	})
-	new Craft.BaseElementSelectInput({
-		id: '{{id}}-Picker',
-		name: 'purchasables[{{type}}]',
-		elementType: '{{type}}',
-		sources: '*',
-		condition: null,
-		criteria: null,
-		allowSelfRelations: false,
-		sourceElementId: null,
-		disabledElementIds: null,
-		viewMode: 'list',
-		single: false,
-		limit: null,
-		showSiteMenu: false,
-		modalStorageKey: null,
-		fieldId: '1',
-		removable: true,
-		sortable: false,
-		selectable: true,
-		prevalidate: false,
-		modalSettings: {},
-		onSelectElements: function(e) {
-			$.each(e, function(i) {
-				var $el = $('#{{id}}-Picker .element[data-id="'+this.id+'"]');
-				var $div = $('<div class="flex flex-nowrap" style="gap: 8px; align-items: center;"></div>').appendTo($el);
-				$div.append($el.find('.status'));
-				$div.append($el.find('.label').css({'flex': '1 1 auto', 'min-width': '0'}));
-				$div.append('<div style="flex: 0 0 auto; white-space: nowrap;">Qty: <input type="number" min="1" class="text qty" style="width: 60px; display: inline-block;" data-id="'+this.id+'" name="qty['+this.id+']" value="1" /></div>');
-				$div.append($el.find('.icon'));
+
+		function addQtyToBundleElement($el, elementId, qtyValue) {
+			if ($el.find('input.qty').length) return;
+			// Hide Craft's built-in delete button (position absolute, hard to control)
+			$el.children('.delete').hide();
+			$el.css('padding-right', '155px');
+			var $wrap = $('<div class="bundle-qty-wrap">' +
+				'Qty: <input type="number" min="1" class="text qty" ' +
+				'data-id="' + elementId + '" name="qty[' + elementId + ']" value="' + qtyValue + '" />' +
+				' <a class="bundle-remove-btn delete icon" title="' + Craft.t('app', 'Remove') + '" role="button"></a>' +
+				'</div>');
+			$el.append($wrap);
+			// Wire the remove button to BaseElementSelectInput
+			$wrap.find('.bundle-remove-btn').on('click', function(ev) {
+				ev.stopPropagation();
+				var picker = $el.closest('.elementselect').data('elementSelect');
+				if (picker) {
+					picker.removeElement($el);
+				}
 			});
-		},
-	});
+		}
+
+		new Craft.BaseElementSelectInput({
+			id: '{{id}}-Picker',
+			name: 'purchasables[{{type}}]',
+			elementType: '{{type}}',
+			sources: '*',
+			condition: null,
+			criteria: null,
+			allowSelfRelations: false,
+			sourceElementId: null,
+			disabledElementIds: null,
+			viewMode: 'list',
+			single: false,
+			limit: null,
+			showSiteMenu: false,
+			modalStorageKey: null,
+			fieldId: '1',
+			removable: true,
+			sortable: false,
+			selectable: true,
+			prevalidate: false,
+			modalSettings: {},
+			onSelectElements: function(e) {
+				$.each(e, function(i) {
+					var $el = $('#{{id}}-Picker .element[data-id="'+this.id+'"]');
+					addQtyToBundleElement($el, this.id, 1);
+				});
+			},
+		});
+
+		$('#{{id}}-Picker .elements .element').each(function() {
+			var $el = $(this);
+			var id = $el.data('id');
+			if (id) {
+				addQtyToBundleElement($el, id, qtyMap[id] || 1);
+			}
+		});
+	})();
 {% endfor %}
 {% endjs %}
 {% do view.registerAssetBundle("webdna\\commerce\\bundles\\assetbundles\\bundles\\BundlesAsset") %}

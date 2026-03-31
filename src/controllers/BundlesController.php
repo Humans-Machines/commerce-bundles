@@ -97,7 +97,9 @@ class BundlesController extends Controller
 
         $variables['tabs'] = [];
 
-        $form = $bundleType->getBundleFieldLayout()->createForm($bundle);
+        $form = $bundleType->getBundleFieldLayout()->createForm($bundle, false, [
+            'registerDeltas' => true,
+        ]);
         $variables['tabs'] = $form->getTabMenu();
         $variables['fieldsHtml'] = $form->render();
 
